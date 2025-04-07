@@ -1,9 +1,9 @@
-use crate::client::map::render::assets::MapAssets;
-use crate::client::map::render::systems::render;
 use crate::GameState;
+use crate::client::map::render::assets::MapAssets;
+use crate::client::map::render::systems::render_map;
 use bevy::app::{App, Plugin};
-use bevy::prelude::{OnEnter, Update};
-use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingState, LoadingStateAppExt};
+use bevy::prelude::OnEnter;
+use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingStateAppExt, LoadingStateConfig};
 
 mod assets;
 mod systems;
@@ -12,11 +12,9 @@ pub struct RenderPlugin;
 
 impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
-        app.add_loading_state(
-            LoadingState::new(GameState::AssetLoading)
-                .continue_to_state(GameState::Main)
-                .load_collection::<MapAssets>(),
+        app.configure_loading_state(
+            LoadingStateConfig::new(GameState::AssetLoading).load_collection::<MapAssets>(),
         )
-        .add_systems(OnEnter(GameState::Main), render);
+        .add_systems(OnEnter(GameState::Main), render_map);
     }
 }

@@ -1,11 +1,10 @@
-
 use crate::GameState;
-use crate::client::player::render::systems::render_player;
-use bevy::app::{App, Plugin};
-use bevy::prelude::{OnEnter, Update};
-use bevy_asset_loader::loading_state::{LoadingState, LoadingStateAppExt};
-use bevy_asset_loader::prelude::ConfigureLoadingState;
 use crate::client::player::render::assets::PlayerAssets;
+use crate::client::player::render::systems::{spawn_player_graphics, update_player_position};
+use bevy::app::{App, Plugin};
+use bevy::prelude::{IntoSystemConfigs, OnEnter, OnExit, Update, in_state};
+use bevy_asset_loader::loading_state::LoadingStateAppExt;
+use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingStateConfig};
 
 mod assets;
 mod systems;
@@ -14,11 +13,13 @@ pub struct RenderPlugin;
 
 impl Plugin for RenderPlugin {
     fn build(&self, app: &mut App) {
-        app.add_loading_state(
-            LoadingState::new(GameState::AssetLoading)
-                .continue_to_state(GameState::Main)
-                .load_collection::<PlayerAssets>(),
+        app.configure_loading_state(
+            LoadingStateConfig::new(GameState::AssetLoading).load_collection::<PlayerAssets>(),
         )
-            .add_systems(OnEnter(GameState::Main), render_player);
+        .add_systems(OnEnter(GameState::Main), spawn_player_graphics)
+        .add_systems(
+            Update,
+            update_player_position.run_if(in_state(GameState::Main)),
+        );
     }
 }

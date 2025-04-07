@@ -1,10 +1,15 @@
-use bevy::prelude::{Component, Resource, Vec2};
+use bevy::prelude::{Component, Dir2, Entity, Event, Resource, Vec2};
 
 pub const TILESIZE: f32 = 32.;
 
 pub enum TileType {
     Floor,
     Wall,
+}
+
+#[derive(Clone, Copy)]
+pub enum PlayerInputType {
+    MoveAttempt(Dir2),
 }
 
 #[derive(Resource)]
@@ -21,6 +26,12 @@ pub struct Tile;
 
 #[derive(Component)]
 pub struct Position(pub Vec2);
+
+#[derive(Event)]
+pub struct PlayerInputAttempt {
+    pub(crate) entity: Entity,
+    pub(crate) input_type: PlayerInputType,
+}
 
 impl Map {
     pub fn index(&self, x: usize, y: usize) -> usize {
