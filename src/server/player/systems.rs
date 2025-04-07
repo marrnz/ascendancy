@@ -1,9 +1,11 @@
 use crate::server::PlayerInputConfirmed;
-use crate::shared::{Player, PlayerInputAttempt, PlayerInputType, Position};
-use bevy::prelude::{Commands, EventReader, EventWriter, Query, Vec2, With};
+use crate::shared::{Player, PlayerInputAttempt, PlayerInputType, Position, PreviousPosition};
+use bevy::prelude::{Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
+
+const VELOCITY: f32 = 200.0;
 
 pub fn spawn_player(mut commands: Commands) {
-    commands.spawn((Player, Position(Vec2::new(0., 0.))));
+    commands.spawn((Player, Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
 }
 
 pub fn validate_player_inputs(
@@ -17,13 +19,15 @@ pub fn validate_player_inputs(
 }
 
 pub fn handle_player_input_events(
+    time: Res<Time>,
     mut confirmed_player_inputs: EventReader<PlayerInputConfirmed>,
-    mut transforms: Query<&mut Position, With<Player>>,
+    mut player_position: Query<(&mut Position, &mut PreviousPosition), With<Player>>,
 ) {
     for confirmed_player_input in confirmed_player_inputs.read() {
         if let PlayerInputType::MoveAttempt(dir) = confirmed_player_input.input_type {
-            if let Ok(mut position) = transforms.get_mut(confirmed_player_input.entity) {
-                position.0 = position.0 + dir.as_vec2();
+            if let Ok((mut position, mut previous_position)) = player_position.get_mut(confirmed_player_input.entity) {
+                previous_position.0 = position.0;
+                position.0 += dir.as_vec2() * VELOCITY * time.delta_secs();
             }
         }
     }

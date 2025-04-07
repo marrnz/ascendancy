@@ -27,6 +27,9 @@ pub struct Tile;
 #[derive(Component)]
 pub struct Position(pub Vec2);
 
+#[derive(Component)]
+pub struct PreviousPosition(pub Vec2);
+
 #[derive(Event)]
 pub struct PlayerInputAttempt {
     pub(crate) entity: Entity,

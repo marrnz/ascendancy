@@ -2,7 +2,7 @@ use crate::GameState;
 use crate::client::player::render::assets::PlayerAssets;
 use crate::client::player::render::systems::{spawn_player_graphics, update_player_position};
 use bevy::app::{App, Plugin};
-use bevy::prelude::{IntoSystemConfigs, OnEnter, OnExit, Update, in_state};
+use bevy::prelude::{IntoSystemConfigs, OnEnter, Update, in_state};
 use bevy_asset_loader::loading_state::LoadingStateAppExt;
 use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingStateConfig};
 
