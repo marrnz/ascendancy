@@ -1,5 +1,5 @@
-use crate::shared::{Map, Position, Tile};
 use bevy::prelude::*;
+use ascendancy_shared::{Map, Position, Tile};
 
 pub fn spawn_map(map: Res<Map>, mut commands: Commands) {
     for (index, _) in map.tiles.iter().enumerate() {

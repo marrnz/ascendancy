@@ -1,7 +1,7 @@
 use crate::GameState;
-use crate::client::camera::systems::{camera_follow, spawn_camera};
 use bevy::app::{App, Plugin};
 use bevy::prelude::{IntoSystemConfigs, Startup, Update, in_state};
+use crate::camera::systems::{camera_follow, spawn_camera};
 
 mod systems;
 

@@ -1,5 +1,5 @@
-use crate::client::map::render::RenderPlugin;
 use bevy::app::{App, Plugin};
+use crate::map::render::RenderPlugin;
 
 mod render;
 

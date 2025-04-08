@@ -1,9 +1,9 @@
-use crate::shared::PlayerInputType::MoveAttempt;
-use crate::shared::{Player, PlayerInputAttempt};
 use bevy::input::ButtonInput;
 use bevy::math::Dir2;
 use bevy::prelude::{Entity, EventWriter, KeyCode, Query, Res, Vec2, With};
 use std::f32::consts::FRAC_1_SQRT_2;
+use ascendancy_shared::{Player, PlayerInputAttempt};
+use ascendancy_shared::PlayerInputType::MoveAttempt;
 
 pub fn player_input(
     keyboard_input: Res<ButtonInput<KeyCode>>,

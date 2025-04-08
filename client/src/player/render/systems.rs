@@ -1,7 +1,7 @@
-use crate::client::player::render::assets::PlayerAssets;
-use crate::shared::{Player, Position, PreviousPosition, TILESIZE};
 use bevy::prelude::{Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With};
 use bevy::sprite::{Sprite, TextureAtlas};
+use ascendancy_shared::{Player, Position, PreviousPosition, TILESIZE};
+use crate::player::render::assets::PlayerAssets;
 
 pub fn spawn_player_graphics(
     player_textures: Res<PlayerAssets>,

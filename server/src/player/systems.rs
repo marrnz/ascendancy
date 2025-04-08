@@ -1,6 +1,6 @@
-use crate::server::PlayerInputConfirmed;
-use crate::shared::{Player, PlayerInputAttempt, PlayerInputType, Position, PreviousPosition};
+
 use bevy::prelude::{Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
+use ascendancy_shared::{Player, PlayerInputAttempt, PlayerInputConfirmed, PlayerInputType, Position, PreviousPosition};
 
 const VELOCITY: f32 = 200.0;
 

@@ -1,8 +1,8 @@
 use crate::GameState;
-use crate::client::player::render::RenderPlugin;
-use crate::client::player::systems::player_input;
 use bevy::app::{App, FixedUpdate, Plugin};
 use bevy::prelude::{IntoSystemConfigs, in_state};
+use crate::player::render::RenderPlugin;
+use crate::player::systems::player_input;
 
 mod render;
 mod systems;

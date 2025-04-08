@@ -1,5 +1,6 @@
-use crate::shared::Player;
+
 use bevy::prelude::{Camera, Camera2d, Commands, Query, Transform, With, Without};
+use ascendancy_shared::Player;
 
 pub fn spawn_camera(mut commands: Commands) {
     commands.spawn(Camera2d);

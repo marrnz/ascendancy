@@ -1,8 +1,7 @@
-use crate::server::map::systems::spawn_map;
-use crate::shared::Map;
 use bevy::app::{App, Plugin, Startup};
+use ascendancy_shared::Map;
+use crate::map::systems::spawn_map;
 
-pub mod resources;
 mod systems;
 
 pub struct MapPlugin;
