@@ -5,6 +5,7 @@ use bevy::app::{App, ScheduleRunnerPlugin};
 use bevy::prelude::{info, PluginGroup};
 use bevy_renet::RenetServerPlugin;
 use std::time::{Duration, SystemTime};
+use bevy::log::LogPlugin;
 use bevy_renet::netcode::{NetcodeServerPlugin, NetcodeServerTransport, ServerAuthentication, ServerConfig};
 use bevy_renet::netcode::NetcodeTransportError::Netcode;
 use bevy_renet::renet::{ConnectionConfig, RenetServer};
@@ -21,9 +22,10 @@ pub fn main() {
     App::new()
         .add_plugins(
             MinimalPlugins.set(ScheduleRunnerPlugin::run_loop(Duration::from_secs_f64(
-                1.0 / 60.0,
+                1.0 / 128.0,
             ))),
         )
+        .add_plugins(LogPlugin::default())
         .add_plugins(RenetServerPlugin)
         .add_plugins(NetcodeServerPlugin)
         .add_plugins(NetcodePlugin)
@@ -35,7 +37,6 @@ pub fn main() {
 }
 
 fn create_renet_netcode_server_transport() -> NetcodeServerTransport {
-    info!("Create netcode server transport.");
     let server_addr = "127.0.0.1:5000".parse().unwrap();
     let socket = UdpSocket::bind(server_addr).unwrap();
     let server_config = ServerConfig {
