@@ -1,17 +1,18 @@
 use crate::GameState;
-use crate::netcode::events::ClientMessage;
-use ascendancy_shared::bincode_config;
+use ascendancy_shared::{ClientNetworkMessage, bincode_config};
 use bevy::prelude::{EventReader, EventWriter, NextState, Res, ResMut, State, info};
+use bevy::utils::info;
 use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
-use bincode::error::DecodeError;
 
-pub fn receive_reliable_ordered_client_messages(
-    mut server: ResMut<RenetServer>,
-    mut client_messages: EventWriter<ClientMessage>,
-) {
+pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>) {
+    // TODO: Can this method of sequentially iterating clients cause input lag for the player?
     for client_id in server.clients_id() {
         while let Some(message) = server.receive_message(client_id, DefaultChannel::ReliableOrdered)
         {
+            let (decoded, len): (ClientNetworkMessage, usize) =
+                bincode::decode_from_slice(&message[..], bincode_config())
+                    .expect("Error decoding reliable ordered client messages");
+            info!("Received reliable ordered client message: {:?}", decoded);
         }
     }
 }

@@ -1,5 +1,6 @@
 use bevy::prelude::{Component, Dir2, Entity, Event, Resource, States, Vec2};
 use bincode::config::Configuration;
+use bincode::{Decode, Encode};
 
 pub const PROTOCOL_ID: u64 = 1000;
 pub const TILESIZE: f32 = 32.;
@@ -14,11 +15,17 @@ pub enum PlayerInputType {
     MoveAttempt(Dir2),
 }
 
+#[derive(Encode, Decode, Debug)]
+pub struct ClientNetworkMessage {
+    pub message_type: NetworkMessageType
+}
+
+#[derive(Encode, Decode, Debug)]
 pub enum NetworkMessageType {
     StateTransition { target_state: ClientGameState },
 }
 
-#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq)]
+#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq, Encode, Decode)]
 pub enum ClientGameState {
     #[default]
     AssetLoading,

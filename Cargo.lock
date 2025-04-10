@@ -211,6 +211,7 @@ dependencies = [
  "bevy",
  "bevy_asset_loader",
  "bevy_renet",
+ "bincode",
  "uuid",
 ]
 
