@@ -1,13 +1,12 @@
 use std::net::{UdpSocket};
 use ascendancy_shared::{PlayerInputAttempt, PlayerInputConfirmed, PROTOCOL_ID};
-use bevy::{DefaultPlugins, MinimalPlugins};
+use bevy::{MinimalPlugins};
 use bevy::app::{App, ScheduleRunnerPlugin};
-use bevy::prelude::{info, PluginGroup};
+use bevy::prelude::{PluginGroup, States};
 use bevy_renet::RenetServerPlugin;
 use std::time::{Duration, SystemTime};
 use bevy::log::LogPlugin;
 use bevy_renet::netcode::{NetcodeServerPlugin, NetcodeServerTransport, ServerAuthentication, ServerConfig};
-use bevy_renet::netcode::NetcodeTransportError::Netcode;
 use bevy_renet::renet::{ConnectionConfig, RenetServer};
 use crate::netcode::NetcodePlugin;
 
@@ -16,9 +15,7 @@ mod player;
 mod netcode;
 
 pub fn main() {
-    info!("Starting...");
     let server = RenetServer::new(ConnectionConfig::default());
-    info!("Server created...");
     App::new()
         .add_plugins(
             MinimalPlugins.set(ScheduleRunnerPlugin::run_loop(Duration::from_secs_f64(
@@ -47,4 +44,12 @@ fn create_renet_netcode_server_transport() -> NetcodeServerTransport {
         authentication: ServerAuthentication::Unsecure
     };
     NetcodeServerTransport::new(server_config, socket).unwrap()
+}
+
+#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq)]
+pub enum GameState {
+    #[default]
+    WaitingForFullLobby,
+    WaitingForPlayersReady,
+    PvePhase
 }

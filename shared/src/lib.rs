@@ -1,4 +1,5 @@
-use bevy::prelude::{Component, Dir2, Entity, Event, Resource, Vec2};
+use bevy::prelude::{Component, Dir2, Entity, Event, Resource, States, Vec2};
+use bincode::config::Configuration;
 
 pub const PROTOCOL_ID: u64 = 1000;
 pub const TILESIZE: f32 = 32.;
@@ -11,6 +12,20 @@ pub enum TileType {
 #[derive(Clone, Copy)]
 pub enum PlayerInputType {
     MoveAttempt(Dir2),
+}
+
+pub enum NetworkMessageType {
+    StateTransition { target_state: ClientGameState },
+}
+
+#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq)]
+pub enum ClientGameState {
+    #[default]
+    AssetLoading,
+    ConnectingToServer,
+    WaitingForFullLobby,
+    Spawning,
+    PvePhase,
 }
 
 #[derive(Resource)]
@@ -41,6 +56,12 @@ pub struct PlayerInputAttempt {
 pub struct PlayerInputConfirmed {
     pub entity: Entity,
     pub input_type: PlayerInputType,
+}
+
+pub fn bincode_config() -> Configuration {
+    bincode::config::standard()
+        .with_little_endian()
+        .with_variable_int_encoding()
 }
 
 impl From<&PlayerInputAttempt> for PlayerInputConfirmed {

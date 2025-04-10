@@ -5,7 +5,7 @@ use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
 use bevy_renet::netcode::{ClientAuthentication, NetcodeClientPlugin, NetcodeClientTransport};
 use bevy_renet::renet::{ConnectionConfig, RenetClient};
 use bevy_renet::RenetClientPlugin;
-use ascendancy_shared::{PlayerInputAttempt, PlayerInputConfirmed, PROTOCOL_ID};
+use ascendancy_shared::{ClientGameState, PlayerInputAttempt, PlayerInputConfirmed, PROTOCOL_ID};
 
 mod camera;
 mod map;
@@ -19,9 +19,9 @@ fn main() {
         .add_plugins(NetcodeClientPlugin)
         .insert_resource(client)
         .insert_resource(create_netcode_client_transport())
-        .init_state::<GameState>()
+        .init_state::<ClientGameState>()
         .add_loading_state(
-            LoadingState::new(GameState::AssetLoading).continue_to_state(GameState::Main),
+            LoadingState::new(ClientGameState::AssetLoading).continue_to_state(ClientGameState::ConnectingToServer),
         )
         .add_event::<PlayerInputAttempt>()
         .add_event::<PlayerInputConfirmed>()
@@ -39,11 +39,4 @@ fn create_netcode_client_transport() -> NetcodeClientTransport{
     let socket = UdpSocket::bind("127.0.0.1:0").unwrap();
     let current_time = SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap();
     NetcodeClientTransport::new(current_time, authentication, socket).unwrap()
-}
-
-#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq)]
-pub enum GameState {
-    #[default]
-    AssetLoading,
-    Main,
 }

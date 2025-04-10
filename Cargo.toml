@@ -6,6 +6,7 @@ resolver = "3"
 bevy = { version = "0.15.3", features = ["dynamic_linking"]}
 bevy_renet = { version = "1.0.0"}
 uuid = {version = "1.16.0", features = ["v4"]}
+bincode = "2.0.1"
 
 [profile.dev]
 opt-level = 1
