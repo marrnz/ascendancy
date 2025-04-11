@@ -1,4 +1,5 @@
-use bevy::prelude::{Component, Dir2, Entity, Event, Resource, States, Vec2};
+use bevy::prelude::{Component, Dir2, Entity, Event, KeyCode, Resource, States, Vec2};
+use bevy_renet::renet::ClientId;
 use bincode::config::Configuration;
 use bincode::{Decode, Encode};
 
@@ -16,13 +17,35 @@ pub enum PlayerInputType {
 }
 
 #[derive(Encode, Decode, Debug)]
-pub struct ClientNetworkMessage {
-    pub message_type: NetworkMessageType
+pub enum ServerNetworkMessage {
+ 
 }
 
 #[derive(Encode, Decode, Debug)]
-pub enum NetworkMessageType {
+pub enum ClientNetworkMessage {
     StateTransition { target_state: ClientGameState },
+    PlayerInput { key_code: EncodedKeyCode }
+}
+
+#[derive(Encode, Decode, Debug)]
+pub enum EncodedKeyCode {
+    KeyW,
+    KeyS,
+    KeyA,
+    KeyD,
+    Unmapped
+}
+
+impl From<KeyCode> for EncodedKeyCode {
+    fn from(key_code: KeyCode) -> Self {
+        match key_code {
+            KeyCode::KeyW => Self::KeyW,
+            KeyCode::KeyS => Self::KeyS,
+            KeyCode::KeyA => Self::KeyA,
+            KeyCode::KeyD => Self::KeyD,
+            _ => Self::Unmapped
+        }
+    }
 }
 
 #[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq, Encode, Decode)]
@@ -42,7 +65,7 @@ pub struct Map {
 }
 
 #[derive(Component)]
-pub struct Player;
+pub struct Player(pub ClientId);
 
 #[derive(Component)]
 pub struct Tile;

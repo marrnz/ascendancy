@@ -1,6 +1,6 @@
 use std::net::UdpSocket;
 use std::time::SystemTime;
-use bevy::app::{App, Plugin};
+use bevy::app::{App, FixedUpdate, Plugin};
 use bevy::prelude::{in_state, IntoSystemConfigs, Update};
 use bevy_renet::netcode::{NetcodeServerPlugin, NetcodeServerTransport, ServerAuthentication, ServerConfig};
 use bevy_renet::renet::{ConnectionConfig, RenetServer};
@@ -10,6 +10,7 @@ use crate::GameState;
 use crate::netcode::systems::{handle_server_events, receive_reliable_ordered_client_messages};
 
 mod systems;
+mod network_message_handler;
 
 pub struct NetcodePlugin;
 
@@ -21,7 +22,7 @@ impl Plugin for NetcodePlugin {
             .insert_resource(server)
             .insert_resource(create_renet_netcode_server_transport())
             .add_systems(Update, handle_server_events)
-            .add_systems(Update, receive_reliable_ordered_client_messages.run_if(in_state(GameState::WaitingForPlayersReady)));
+            .add_systems(FixedUpdate, receive_reliable_ordered_client_messages.run_if(in_state(GameState::GenerateWorld)));
     }
 }
 

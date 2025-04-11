@@ -3,8 +3,6 @@ use bevy::app::{App, ScheduleRunnerPlugin};
 use bevy::log::LogPlugin;
 use bevy::prelude::{AppExtStates, PluginGroup, States};
 use bevy::MinimalPlugins;
-use bevy_renet::netcode::NetcodeServerPlugin;
-use bevy_renet::renet::{ConnectionConfig, RenetServer};
 use std::time::Duration;
 use bevy::state::app::StatesPlugin;
 use crate::netcode::NetcodePlugin;
@@ -33,6 +31,9 @@ pub fn main() {
 pub enum GameState {
     #[default]
     WaitingForFullLobby,
+    GenerateWorld,
     WaitingForPlayersReady,
-    PvePhase
+    PlayerVsEnvironment,
+    PlayerVsPlayer,
+    GameOver
 }

@@ -1,11 +1,14 @@
 
 use bevy::prelude::{Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
+use bevy_renet::renet::RenetServer;
 use ascendancy_shared::{Player, PlayerInputAttempt, PlayerInputConfirmed, PlayerInputType, Position, PreviousPosition};
 
 const VELOCITY: f32 = 200.0;
 
-pub fn spawn_player(mut commands: Commands) {
-    commands.spawn((Player, Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
+pub fn spawn_player(mut commands: Commands, server: Res<RenetServer>) {
+    server.clients_id_iter().for_each(|client_id| {
+        commands.spawn((Player(client_id), Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
+    });
 }
 
 pub fn validate_player_inputs(
@@ -27,7 +30,7 @@ pub fn handle_player_input_events(
         if let PlayerInputType::MoveAttempt(dir) = confirmed_player_input.input_type {
             if let Ok((mut position, mut previous_position)) = player_position.get_mut(confirmed_player_input.entity) {
                 previous_position.0 = position.0;
-                position.0 += dir.as_vec2() * VELOCITY * time.delta_secs();
+                position.0 += dir.as_vec2() * VELOCITY * time.delta().as_secs_f32();
             }
         }
     }

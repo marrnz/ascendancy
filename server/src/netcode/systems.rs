@@ -1,7 +1,6 @@
 use crate::GameState;
 use ascendancy_shared::{ClientNetworkMessage, bincode_config};
-use bevy::prelude::{EventReader, EventWriter, NextState, Res, ResMut, State, info};
-use bevy::utils::info;
+use bevy::prelude::{EventReader, NextState, Res, ResMut, State, info};
 use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
 
 pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>) {
@@ -9,7 +8,7 @@ pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>)
     for client_id in server.clients_id() {
         while let Some(message) = server.receive_message(client_id, DefaultChannel::ReliableOrdered)
         {
-            let (decoded, len): (ClientNetworkMessage, usize) =
+            let (decoded, _): (ClientNetworkMessage, usize) =
                 bincode::decode_from_slice(&message[..], bincode_config())
                     .expect("Error decoding reliable ordered client messages");
             info!("Received reliable ordered client message: {:?}", decoded);
@@ -32,7 +31,7 @@ pub fn handle_server_events(
         }
         if server.connected_clients() == 2 {
             match state.get() {
-                GameState::WaitingForFullLobby => next_state.set(GameState::WaitingForPlayersReady),
+                GameState::WaitingForFullLobby => next_state.set(GameState::GenerateWorld),
                 _ => panic!(
                     "Server crash because second player connected when not in waiting for full lobby"
                 ),

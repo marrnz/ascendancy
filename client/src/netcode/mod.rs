@@ -9,6 +9,7 @@ use std::net::UdpSocket;
 use std::time::SystemTime;
 
 mod systems;
+mod network_message_handler;
 
 pub struct NetcodePlugin;
 
