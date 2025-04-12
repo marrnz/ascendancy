@@ -1,5 +1,5 @@
 use ascendancy_shared::{ServerNetworkMessage, bincode_config};
-use bevy::prelude::error;
+use bevy::prelude::{error, info};
 use bevy_renet::renet::{ClientId, DefaultChannel, RenetServer};
 use bincode::encode_to_vec;
 

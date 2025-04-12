@@ -1,12 +1,13 @@
 use crate::map::render::assets::MapAssets;
 use ascendancy_shared::{Map, Position, TILESIZE, Tile, TileType};
-use bevy::prelude::{Added, Commands, Entity, Query, Res, Sprite, TextureAtlas, Transform};
+use bevy::prelude::{info, Added, Commands, Entity, Query, Res, Sprite, TextureAtlas, Transform};
 
 pub fn render_map(
     map_textures: Res<MapAssets>,
     mut commands: Commands,
     query: Query<(Entity, &Tile), Added<Tile>>,
 ) {
+    info!("Spawn player graphics");
     let mut texture_atlas = TextureAtlas::from(map_textures.atlas.clone());
     for (entity, tile) in query.iter() {
         let atlas_index = match tile.tile_type {

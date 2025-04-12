@@ -1,7 +1,10 @@
 use ascendancy_shared::{ClientGameState, Map, Player, Position};
 use bevy::prelude::*;
 use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
+use crate::camera::CameraPlugin;
+use crate::map::MapPlugin;
 use crate::netcode::NetcodePlugin;
+use crate::player::PlayerPlugin;
 use crate::state::StatePlugin;
 
 mod camera;
@@ -21,6 +24,9 @@ fn main() {
         // custom stuff
         .add_plugins(NetcodePlugin)
         .add_plugins(StatePlugin)
+        .add_plugins(PlayerPlugin)
+        .add_plugins(MapPlugin)
+        .add_plugins(CameraPlugin)
         .init_state::<ClientGameState>()
         .add_event::<MapSpawned>()
         .add_event::<PlayerSpawned>()

@@ -1,14 +1,12 @@
 use crate::state::resources::Lobby;
 use crate::state::state::GameState;
 use crate::state::systems::{
-    check_for_waiting_for_players_transition, send_waiting_for_players_message, update_lobby_state,
+    check_for_generate_world_transition, send_waiting_for_players_message,
+    transition_to_waiting_for_players_ready, update_lobby_state,
 };
 use ascendancy_shared::{Map, Player};
 use bevy::app::App;
-use bevy::prelude::{
-    AppExtStates, Condition, IntoSystemConfigs, OnEnter, Plugin, Update, any_with_component,
-    in_state, resource_exists,
-};
+use bevy::prelude::{AppExtStates, Condition, IntoSystemConfigs, OnEnter, Plugin, Update, any_with_component, in_state, resource_exists, run_once};
 
 pub mod resources;
 pub mod state;
@@ -24,13 +22,10 @@ impl Plugin for StatePlugin {
                 Update,
                 (
                     update_lobby_state,
-                    check_for_waiting_for_players_transition
-                        .run_if(
-                            in_state(GameState::GenerateWorld)
-                                .and(any_with_component::<Player>)
-                                .and(resource_exists::<Map>),
-                        )
-                        .chain(),
+                    check_for_generate_world_transition
+                        .run_if(in_state(GameState::WaitingForFullLobby)),
+                    transition_to_waiting_for_players_ready
+                        .run_if(any_with_component::<Player>.and(resource_exists::<Map>).and(run_once)),
                 ),
             )
             .add_systems(

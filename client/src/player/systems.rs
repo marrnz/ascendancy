@@ -3,7 +3,7 @@ use ascendancy_shared::PlayerInputType::MoveAttempt;
 use ascendancy_shared::{Player, Position, PreviousPosition};
 use bevy::input::ButtonInput;
 use bevy::math::Dir2;
-use bevy::prelude::{Commands, Entity, EventReader, EventWriter, KeyCode, Query, Res, Vec2, With};
+use bevy::prelude::{info, Commands, Entity, EventReader, EventWriter, KeyCode, Query, Res, Vec2, With};
 use std::f32::consts::FRAC_1_SQRT_2;
 
 pub fn insert_player_entity(
@@ -11,10 +11,11 @@ pub fn insert_player_entity(
     mut player_spawned: EventReader<PlayerSpawned>,
 ) {
     if let Some(player_spawned) = player_spawned.read().next() {
+        info!("Spawning player");
         commands.spawn((
             Player,
             player_spawned.position.clone(),
-            player_spawned.position.clone(),
+            PreviousPosition(player_spawned.position.0),
         ));
     }
 }

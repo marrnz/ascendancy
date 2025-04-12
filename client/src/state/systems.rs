@@ -1,4 +1,4 @@
-use bevy::log::{info};
+use bevy::log::{ info};
 use bevy::prelude::{NextState, Res, ResMut};
 use bevy_renet::renet::RenetClient;
 use ascendancy_shared::{ClientGameState, ClientNetworkMessage};

@@ -1,4 +1,4 @@
-use bevy::prelude::{Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With};
+use bevy::prelude::{info, Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With};
 use bevy::sprite::{Sprite, TextureAtlas};
 use ascendancy_shared::{Player, Position, PreviousPosition, TILESIZE};
 use crate::player::render::assets::PlayerAssets;
@@ -8,6 +8,7 @@ pub fn spawn_player_graphics(
     mut commands: Commands,
     query: Query<(Entity, &Position), Added<Player>>,
 ) {
+    info!("Spawn player graphics");
     let mut texture_atlas = TextureAtlas::from(player_textures.atlas.clone());
     texture_atlas.index = 5;
     for (player_entity, player_position) in query.iter() {

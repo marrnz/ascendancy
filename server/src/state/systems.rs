@@ -1,11 +1,16 @@
 use crate::ClientStateTransitionEvent;
+use crate::netcode::components::Client;
 use crate::netcode::network_handler;
 use crate::state::resources::Lobby;
 use crate::state::state::GameState;
-use ascendancy_shared::{ClientGameState, Map, Player, Position, ServerNetworkMessage, Tile};
-use bevy::prelude::{EventReader, NextState, Query, Res, ResMut, With};
+use ascendancy_shared::{ClientGameState, Map, Player, Position, ServerNetworkMessage};
+use bevy::prelude::{EventReader, NextState, Query, Res, ResMut, With, info};
 use bevy_renet::renet::RenetServer;
-use crate::netcode::components::Client;
+
+pub fn transition_to_waiting_for_players_ready(mut next_state: ResMut<NextState<GameState>>) {
+    info!("transition_to_waiting_for_players_ready");
+    next_state.set(GameState::WaitingForPlayersReady);
+}
 
 pub fn update_lobby_state(
     mut client_state_transitions: EventReader<ClientStateTransitionEvent>,
@@ -18,17 +23,19 @@ pub fn update_lobby_state(
     }
 }
 
-pub fn check_for_waiting_for_players_transition(
+pub fn check_for_generate_world_transition(
     lobby: Res<Lobby>,
     mut next_state: ResMut<NextState<GameState>>,
 ) {
-    if lobby
-        .players
-        .values()
-        .map(|lobby_state| &lobby_state.client_game_state)
-        .all(|client_game_state| *client_game_state == ClientGameState::WaitingForFullLobby)
+    if lobby.full
+        && lobby
+            .players
+            .values()
+            .map(|lobby_state| &lobby_state.client_game_state)
+            .all(|client_game_state| *client_game_state == ClientGameState::WaitingForFullLobby)
     {
-        next_state.set(GameState::WaitingForPlayersReady);
+        info!("Transitioning server state to GenerateWorld");
+        next_state.set(GameState::GenerateWorld);
     }
 }
 

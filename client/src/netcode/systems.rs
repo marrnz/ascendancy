@@ -12,7 +12,7 @@ pub fn receive_reliable_unordered_server_messages(
         let (decoded, _): (ServerNetworkMessage, usize) =
             bincode::decode_from_slice(&message[..], bincode_config())
                 .expect("Error decoding reliable ordered server messages");
-        info!("Receiving server message {:?}", &decoded);
+        info!("Received server message!");
         match decoded {
             ServerNetworkMessage::WaitingForPlayers {
                 player_position,

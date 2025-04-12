@@ -1,12 +1,10 @@
-
-use bevy::app::{App, Plugin};
-use bevy::prelude::{IntoSystemConfigs, OnEnter, Update, in_state, on_event, Condition, run_once};
-use bevy_asset_loader::loading_state::LoadingStateAppExt;
-use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingStateConfig};
-use ascendancy_shared::ClientGameState;
 use crate::player::render::assets::PlayerAssets;
 use crate::player::render::systems::{spawn_player_graphics, update_player_position};
-use crate::PlayerSpawned;
+use ascendancy_shared::{ClientGameState, Player};
+use bevy::app::{App, Plugin};
+use bevy::prelude::{any_with_component, in_state, not, run_once, Condition, IntoSystemConfigs, Update};
+use bevy_asset_loader::loading_state::LoadingStateAppExt;
+use bevy_asset_loader::prelude::{ConfigureLoadingState, LoadingStateConfig};
 
 mod assets;
 mod systems;
@@ -18,10 +16,10 @@ impl Plugin for RenderPlugin {
         app.configure_loading_state(
             LoadingStateConfig::new(ClientGameState::AssetLoading).load_collection::<PlayerAssets>(),
         )
-        .add_systems(Update, spawn_player_graphics.run_if(run_once))
+        .add_systems(Update, spawn_player_graphics.run_if(any_with_component::<Player>.and(run_once)))
         .add_systems(
             Update,
-            update_player_position.run_if(in_state(ClientGameState::ConnectingToServer)),
+            update_player_position.run_if(in_state(ClientGameState::PlayerVsEnvironment).and(in_state(ClientGameState::PlayerVsPlayer))),
         );
     }
 }

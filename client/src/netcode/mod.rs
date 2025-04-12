@@ -1,5 +1,5 @@
 use ascendancy_shared::PROTOCOL_ID;
-use bevy::app::{App, Plugin};
+use bevy::app::{App, Plugin, PreUpdate};
 use bevy_renet::netcode::{ClientAuthentication, NetcodeClientPlugin, NetcodeClientTransport};
 use bevy_renet::renet::{ConnectionConfig, RenetClient};
 use bevy_renet::RenetClientPlugin;
@@ -20,7 +20,7 @@ impl Plugin for NetcodePlugin {
             .add_plugins(NetcodeClientPlugin)
             .insert_resource(client)
             .insert_resource(create_netcode_client_transport())
-            .add_systems(Update, receive_reliable_unordered_server_messages);
+            .add_systems(PreUpdate, receive_reliable_unordered_server_messages);
     }
 }
 

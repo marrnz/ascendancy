@@ -1,15 +1,17 @@
 
-use bevy::prelude::{Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
+use bevy::prelude::{info, Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
 use bevy_renet::renet::RenetServer;
 use ascendancy_shared::{Player, PlayerInputType, Position, PreviousPosition};
 use crate::netcode::components::Client;
+use crate::state::resources::Lobby;
 
 const VELOCITY: f32 = 200.0;
 
-pub fn spawn_player(mut commands: Commands, server: Res<RenetServer>) {
-    server.clients_id_iter().for_each(|client_id| {
-        commands.spawn((Player, Client(client_id), Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
-    });
+pub fn spawn_player(mut commands: Commands, lobby: Res<Lobby>) {
+    info!("spawning players");
+    for client in lobby.players.keys() {
+        commands.spawn((Player, Client(*client), Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
+    }
 }
 
 /*
