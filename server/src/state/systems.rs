@@ -8,7 +8,6 @@ use bevy::prelude::{EventReader, NextState, Query, Res, ResMut, With, info};
 use bevy_renet::renet::RenetServer;
 
 pub fn transition_to_waiting_for_players_ready(mut next_state: ResMut<NextState<GameState>>) {
-    info!("transition_to_waiting_for_players_ready");
     next_state.set(GameState::WaitingForPlayersReady);
 }
 
@@ -23,6 +22,21 @@ pub fn update_lobby_state(
     }
 }
 
+pub fn check_for_player_vs_env_transition(
+    lobby: Res<Lobby>,
+    mut next_state: ResMut<NextState<GameState>>,
+) {
+    if lobby.full
+        && lobby
+            .players
+            .values()
+            .map(|lobby_state| &lobby_state.client_game_state)
+            .all(|client_game_state| *client_game_state == ClientGameState::PlayerVsEnvironment)
+    {
+        next_state.set(GameState::PlayerVsEnvironment);
+    }
+}
+
 pub fn check_for_generate_world_transition(
     lobby: Res<Lobby>,
     mut next_state: ResMut<NextState<GameState>>,
@@ -34,9 +48,15 @@ pub fn check_for_generate_world_transition(
             .map(|lobby_state| &lobby_state.client_game_state)
             .all(|client_game_state| *client_game_state == ClientGameState::WaitingForFullLobby)
     {
-        info!("Transitioning server state to GenerateWorld");
         next_state.set(GameState::GenerateWorld);
     }
+}
+
+pub fn send_player_vs_env_message(mut server: ResMut<RenetServer>) {
+    network_handler::broadcast(
+        server.as_mut(),
+        ServerNetworkMessage::StartPlayerVsEnvironment,
+    );
 }
 
 pub fn send_waiting_for_players_message(

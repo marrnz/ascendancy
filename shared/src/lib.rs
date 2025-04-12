@@ -26,6 +26,7 @@ pub enum ServerNetworkMessage {
         player_position: Position,
         map: Map,
     },
+    StartPlayerVsEnvironment
 }
 
 #[derive(Encode, Decode, Debug)]

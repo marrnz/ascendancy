@@ -17,6 +17,18 @@ pub fn send(server: &mut RenetServer, client: ClientId, message: ServerNetworkMe
                 error!("Error sending message {:?}", &message);
             }
             server.send_message(client, DefaultChannel::ReliableUnordered, encoded_message);
-        }
+        },
+        _ => panic!("Trying to send a broadcast message {:?}", &encoded_message)
+    }
+}
+
+pub fn broadcast(server: &mut RenetServer, message: ServerNetworkMessage) {
+    let encoded_message = encode_to_vec(&message, bincode_config())
+        .expect(format!("Error encoding message {:?}", message).as_str());
+    match message {
+        ServerNetworkMessage::StartPlayerVsEnvironment => {
+            server.broadcast_message(DefaultChannel::ReliableUnordered, encoded_message);
+        },
+        _ => panic!("Trying to broadcast a send message {:?}", &encoded_message)
     }
 }

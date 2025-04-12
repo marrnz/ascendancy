@@ -16,7 +16,7 @@ impl Plugin for RenderPlugin {
         app.configure_loading_state(
             LoadingStateConfig::new(ClientGameState::AssetLoading).load_collection::<PlayerAssets>(),
         )
-        .add_systems(Update, spawn_player_graphics.run_if(any_with_component::<Player>.and(run_once)))
+        .add_systems(Update, spawn_player_graphics.run_if(in_state(ClientGameState::Spawning).and(run_once)))
         .add_systems(
             Update,
             update_player_position.run_if(in_state(ClientGameState::PlayerVsEnvironment).and(in_state(ClientGameState::PlayerVsPlayer))),

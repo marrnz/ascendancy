@@ -8,7 +8,6 @@ pub fn spawn_player_graphics(
     mut commands: Commands,
     query: Query<(Entity, &Position), Added<Player>>,
 ) {
-    info!("Spawn player graphics");
     let mut texture_atlas = TextureAtlas::from(player_textures.atlas.clone());
     texture_atlas.index = 5;
     for (player_entity, player_position) in query.iter() {

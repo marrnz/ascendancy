@@ -30,6 +30,7 @@ fn main() {
         .init_state::<ClientGameState>()
         .add_event::<MapSpawned>()
         .add_event::<PlayerSpawned>()
+        .add_event::<StartPlayerVsEnvEvent>()
         .run();
 }
 
@@ -42,3 +43,6 @@ pub struct MapSpawned {
 pub struct PlayerSpawned {
     position: Position
 }
+
+#[derive(Event)]
+pub struct StartPlayerVsEnvEvent;

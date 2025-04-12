@@ -8,7 +8,6 @@ use crate::state::resources::Lobby;
 const VELOCITY: f32 = 200.0;
 
 pub fn spawn_player(mut commands: Commands, lobby: Res<Lobby>) {
-    info!("spawning players");
     for client in lobby.players.keys() {
         commands.spawn((Player, Client(*client), Position(Vec2::ZERO), PreviousPosition(Vec2::ZERO)));
     }

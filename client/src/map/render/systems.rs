@@ -7,7 +7,6 @@ pub fn render_map(
     mut commands: Commands,
     query: Query<(Entity, &Tile), Added<Tile>>,
 ) {
-    info!("Spawn player graphics");
     let mut texture_atlas = TextureAtlas::from(map_textures.atlas.clone());
     for (entity, tile) in query.iter() {
         let atlas_index = match tile.tile_type {

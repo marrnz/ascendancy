@@ -1,4 +1,4 @@
-use ascendancy_shared::{bincode_config, ClientNetworkMessage};
+use ascendancy_shared::{ClientNetworkMessage, bincode_config};
 use bevy::log::error;
 use bevy_renet::renet::{DefaultChannel, RenetClient};
 use bincode::encode_to_vec;

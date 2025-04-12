@@ -11,7 +11,6 @@ pub fn insert_player_entity(
     mut player_spawned: EventReader<PlayerSpawned>,
 ) {
     if let Some(player_spawned) = player_spawned.read().next() {
-        info!("Spawning player");
         commands.spawn((
             Player,
             player_spawned.position.clone(),
