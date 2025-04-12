@@ -1,20 +1,32 @@
-use crate::netcode::network_message_handler;
-use ascendancy_shared::{ClientGameState, ClientNetworkMessage};
-use bevy::prelude::{NextState, Res, ResMut};
-use bevy_renet::renet::RenetClient;
+use crate::{MapSpawned, PlayerSpawned};
+use ascendancy_shared::{ServerNetworkMessage, bincode_config};
+use bevy::prelude::{info, EventWriter, ResMut};
+use bevy_renet::renet::{DefaultChannel, RenetClient};
 
-pub fn check_server_connection(
-    client: Res<RenetClient>,
-    mut next_state: ResMut<NextState<ClientGameState>>,
+pub fn receive_reliable_unordered_server_messages(
+    mut client: ResMut<RenetClient>,
+    mut player_spawned: EventWriter<PlayerSpawned>,
+    mut map_spawned: EventWriter<MapSpawned>,
 ) {
-    if client.is_connected() {
-        next_state.set(ClientGameState::WaitingForFullLobby);
+    while let Some(message) = client.receive_message(DefaultChannel::ReliableUnordered) {
+        let (decoded, _): (ServerNetworkMessage, usize) =
+            bincode::decode_from_slice(&message[..], bincode_config())
+                .expect("Error decoding reliable ordered server messages");
+        info!("Receiving server message {:?}", &decoded);
+        match decoded {
+            ServerNetworkMessage::WaitingForPlayers {
+                player_position,
+                map,
+            } => {
+                player_spawned.send(PlayerSpawned {
+                    position: player_position,
+                });
+                map_spawned.send(MapSpawned { map });
+            }
+            _ => panic!(
+                "Received unexpected message {:?} for channel type {}",
+                &message, "reliable unordered'"
+            ),
+        }
     }
-}
-
-pub fn send_waiting_for_lobby_state_message(mut client: ResMut<RenetClient>) {
-    let waiting_for_lobby_message = ClientNetworkMessage::StateTransition {
-        target_state: ClientGameState::WaitingForFullLobby,
-    };
-    network_message_handler::send(waiting_for_lobby_message, &mut client);
 }

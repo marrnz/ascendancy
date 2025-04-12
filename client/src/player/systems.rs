@@ -1,10 +1,25 @@
+use crate::PlayerSpawned;
+use ascendancy_shared::PlayerInputType::MoveAttempt;
+use ascendancy_shared::{Player, Position, PreviousPosition};
 use bevy::input::ButtonInput;
 use bevy::math::Dir2;
-use bevy::prelude::{Entity, EventWriter, KeyCode, Query, Res, Vec2, With};
+use bevy::prelude::{Commands, Entity, EventReader, EventWriter, KeyCode, Query, Res, Vec2, With};
 use std::f32::consts::FRAC_1_SQRT_2;
-use ascendancy_shared::{Player, PlayerInputAttempt};
-use ascendancy_shared::PlayerInputType::MoveAttempt;
 
+pub fn insert_player_entity(
+    mut commands: Commands,
+    mut player_spawned: EventReader<PlayerSpawned>,
+) {
+    if let Some(player_spawned) = player_spawned.read().next() {
+        commands.spawn((
+            Player,
+            player_spawned.position.clone(),
+            player_spawned.position.clone(),
+        ));
+    }
+}
+
+/*
 pub fn player_input(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     query: Query<Entity, With<Player>>,
@@ -42,3 +57,4 @@ pub fn player_input(
         input_type: MoveAttempt(dir),
     });
 }
+*/

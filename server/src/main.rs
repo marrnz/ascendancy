@@ -1,15 +1,18 @@
-use ascendancy_shared::{PlayerInputAttempt, PlayerInputConfirmed};
 use bevy::app::{App, ScheduleRunnerPlugin};
 use bevy::log::LogPlugin;
-use bevy::prelude::{AppExtStates, PluginGroup, States};
+use bevy::prelude::{Event, PluginGroup};
 use bevy::MinimalPlugins;
 use std::time::Duration;
 use bevy::state::app::StatesPlugin;
+use bevy_renet::renet::ClientId;
+use ascendancy_shared::ClientGameState;
 use crate::netcode::NetcodePlugin;
+use crate::state::StatePlugin;
 
 mod map;
 mod player;
 mod netcode;
+mod state;
 
 pub fn main() {
     App::new()
@@ -20,20 +23,15 @@ pub fn main() {
         )
         .add_plugins(StatesPlugin)
         .add_plugins(LogPlugin::default())
+        // custom plugins
         .add_plugins(NetcodePlugin)
-        .init_state::<GameState>()
-        .add_event::<PlayerInputAttempt>()
-        .add_event::<PlayerInputConfirmed>()
+        .add_plugins(StatePlugin)
+        .add_event::<ClientStateTransitionEvent>()
         .run();
 }
 
-#[derive(Default, States, Eq, Clone, Debug, Hash, PartialEq)]
-pub enum GameState {
-    #[default]
-    WaitingForFullLobby,
-    GenerateWorld,
-    WaitingForPlayersReady,
-    PlayerVsEnvironment,
-    PlayerVsPlayer,
-    GameOver
+#[derive(Event)]
+pub struct ClientStateTransitionEvent {
+    client_id: ClientId,
+    target_state: ClientGameState
 }

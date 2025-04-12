@@ -1,15 +1,15 @@
-use crate::netcode::systems::{check_server_connection, send_waiting_for_lobby_state_message};
-use ascendancy_shared::{ClientGameState, PROTOCOL_ID};
-use bevy::app::{App, FixedUpdate, Plugin};
-use bevy::prelude::{IntoSystemConfigs, OnEnter, in_state};
-use bevy_renet::RenetClientPlugin;
+use ascendancy_shared::PROTOCOL_ID;
+use bevy::app::{App, Plugin};
 use bevy_renet::netcode::{ClientAuthentication, NetcodeClientPlugin, NetcodeClientTransport};
 use bevy_renet::renet::{ConnectionConfig, RenetClient};
+use bevy_renet::RenetClientPlugin;
 use std::net::UdpSocket;
 use std::time::SystemTime;
+use bevy::prelude::Update;
+use crate::netcode::systems::receive_reliable_unordered_server_messages;
 
+pub mod network_handler;
 mod systems;
-mod network_message_handler;
 
 pub struct NetcodePlugin;
 
@@ -20,14 +20,7 @@ impl Plugin for NetcodePlugin {
             .add_plugins(NetcodeClientPlugin)
             .insert_resource(client)
             .insert_resource(create_netcode_client_transport())
-            .add_systems(
-                FixedUpdate,
-                check_server_connection.run_if(in_state(ClientGameState::ConnectingToServer)),
-            )
-            .add_systems(
-                OnEnter(ClientGameState::WaitingForFullLobby),
-                send_waiting_for_lobby_state_message,
-            );
+            .add_systems(Update, receive_reliable_unordered_server_messages);
     }
 }
 

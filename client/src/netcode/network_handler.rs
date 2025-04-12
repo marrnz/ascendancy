@@ -1,9 +1,9 @@
-use ascendancy_shared::{ClientNetworkMessage, bincode_config};
-use bevy::log::{error, warn};
+use ascendancy_shared::{bincode_config, ClientNetworkMessage};
+use bevy::log::error;
 use bevy_renet::renet::{DefaultChannel, RenetClient};
 use bincode::encode_to_vec;
 
-pub fn send(message: ClientNetworkMessage, client: &mut RenetClient) {
+pub fn send(client: &mut RenetClient, message: ClientNetworkMessage) {
     let encoded_message = encode_to_vec(&message, bincode_config())
         .expect(format!("Error encoding message {:?}", &message).as_str());
     match &message {
@@ -19,6 +19,5 @@ pub fn send(message: ClientNetworkMessage, client: &mut RenetClient) {
             }
             client.send_message(DefaultChannel::ReliableOrdered, encoded_message);
         }
-        _ => panic!("Trying to send an unknown message type {:?}!", &message),
     };
 }

@@ -1,7 +1,8 @@
-use crate::GameState;
 use ascendancy_shared::{ClientNetworkMessage, bincode_config};
-use bevy::prelude::{EventReader, NextState, Res, ResMut, State, info};
+use bevy::prelude::{EventReader, NextState, Res, ResMut, State, info, EventWriter};
 use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
+use crate::ClientStateTransitionEvent;
+use crate::state::state::GameState;
 
 pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>) {
     // TODO: Can this method of sequentially iterating clients cause input lag for the player?
@@ -11,7 +12,29 @@ pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>)
             let (decoded, _): (ClientNetworkMessage, usize) =
                 bincode::decode_from_slice(&message[..], bincode_config())
                     .expect("Error decoding reliable ordered client messages");
-            info!("Received reliable ordered client message: {:?}", decoded);
+            match decoded {
+                ClientNetworkMessage::PlayerInput { .. } => todo!(),
+                _ => panic!("Received unexpected message {:?} for channel type {}", &message, "reliable ordered'")
+            }
+        }
+    }
+}
+
+pub fn receive_reliable_unordered_client_messages(mut server: ResMut<RenetServer>, mut state_transitions: EventWriter<ClientStateTransitionEvent>) {
+    // TODO: Can this method of sequentially iterating clients cause input lag for the player?
+    for client_id in server.clients_id() {
+        while let Some(message) = server.receive_message(client_id, DefaultChannel::ReliableUnordered)
+        {
+            let (decoded, _): (ClientNetworkMessage, usize) =
+                bincode::decode_from_slice(&message[..], bincode_config())
+                    .expect("Error decoding reliable ordered client messages");
+            info!("Receiving client message {:?}", &decoded);
+            match decoded {
+                ClientNetworkMessage::StateTransition {target_state} => {
+                    state_transitions.send(ClientStateTransitionEvent{client_id, target_state});
+                },
+                _ => panic!("Received unexpected message {:?} for channel type {}", &message, "reliable unordered'")
+            }
         }
     }
 }
