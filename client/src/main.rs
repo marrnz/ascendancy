@@ -31,18 +31,25 @@ fn main() {
         .add_event::<MapSpawned>()
         .add_event::<PlayerSpawned>()
         .add_event::<StartPlayerVsEnvEvent>()
+        .add_event::<StartPlayerVsPlayerEvent>()
         .run();
 }
 
 #[derive(Event)]
 pub struct MapSpawned {
-    map: Map
+    map: Map,
 }
 
 #[derive(Event)]
 pub struct PlayerSpawned {
-    position: Position
+    position: Position,
 }
 
 #[derive(Event)]
 pub struct StartPlayerVsEnvEvent;
+
+#[derive(Event)]
+pub struct StartPlayerVsPlayerEvent {
+    position: Position,
+    opponent_position: Position,
+}

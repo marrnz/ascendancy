@@ -1,6 +1,6 @@
 use bevy::prelude::{info, Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With};
 use bevy::sprite::{Sprite, TextureAtlas};
-use ascendancy_shared::{Player, Position, PreviousPosition, TILESIZE};
+use ascendancy_shared::{Opponent, Player, Position, PreviousPosition, TILESIZE};
 use crate::player::render::assets::PlayerAssets;
 
 pub fn spawn_player_graphics(
@@ -10,6 +10,25 @@ pub fn spawn_player_graphics(
 ) {
     let mut texture_atlas = TextureAtlas::from(player_textures.atlas.clone());
     texture_atlas.index = 5;
+    for (player_entity, player_position) in query.iter() {
+        commands.entity(player_entity).insert((
+            Sprite::from_atlas_image(player_textures.spritesheet.clone(), texture_atlas.clone()),
+            Transform::from_xyz(
+                player_position.0.x * TILESIZE,
+                player_position.0.y * TILESIZE,
+                1.,
+            ),
+        ));
+    }
+}
+
+pub fn spawn_opponent(
+    player_textures: Res<PlayerAssets>,
+    mut commands: Commands,
+    query: Query<(Entity, &Position), Added<Opponent>>,
+) {
+    let mut texture_atlas = TextureAtlas::from(player_textures.atlas.clone());
+    texture_atlas.index = 6;
     for (player_entity, player_position) in query.iter() {
         commands.entity(player_entity).insert((
             Sprite::from_atlas_image(player_textures.spritesheet.clone(), texture_atlas.clone()),

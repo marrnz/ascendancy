@@ -8,7 +8,8 @@ pub fn send(server: &mut RenetServer, client: ClientId, message: ServerNetworkMe
         .unwrap_or_else(|_| panic!("Error encoding message {:?}", message));
     // Decide whether broadcast or not, if client add it to enum variant
     match message {
-        ServerNetworkMessage::WaitingForPlayers { .. } => {
+        ServerNetworkMessage::WaitingForPlayers { .. }
+        | ServerNetworkMessage::StartPlayerVsPlayer { .. } => {
             if !server.can_send_message(
                 client,
                 DefaultChannel::ReliableUnordered,

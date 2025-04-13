@@ -1,11 +1,10 @@
-use crate::state::systems::{
-    check_server_connection, send_pve_ready_message, send_waiting_for_lobby_state_message,
-    set_spawning_state, transition_to_pve_state,
-};
-use crate::{MapSpawned, PlayerSpawned, StartPlayerVsEnvEvent};
+use crate::state::systems::{check_server_connection, send_pve_ready_message, send_waiting_for_lobby_state_message, set_spawning_state, transition_to_pve_state, transition_to_pvp_state};
+use crate::{MapSpawned, PlayerSpawned, StartPlayerVsEnvEvent, StartPlayerVsPlayerEvent};
 use ascendancy_shared::{ClientGameState, Player, Tile};
 use bevy::app::{App, FixedUpdate, Plugin};
-use bevy::prelude::{Condition, IntoSystemConfigs, OnEnter, Update, any_with_component, in_state, on_event, run_once};
+use bevy::prelude::{
+    Condition, IntoSystemConfigs, OnEnter, Update, any_with_component, in_state, on_event, run_once,
+};
 
 mod systems;
 
@@ -27,12 +26,19 @@ impl Plugin for StatePlugin {
         )
         .add_systems(
             Update,
-            send_pve_ready_message
-                .run_if(any_with_component::<Tile>.and(any_with_component::<Player>).and(run_once)),
+            send_pve_ready_message.run_if(
+                any_with_component::<Tile>
+                    .and(any_with_component::<Player>)
+                    .and(run_once),
+            ),
         )
         .add_systems(
             Update,
             transition_to_pve_state.run_if(on_event::<StartPlayerVsEnvEvent>),
+        )
+        .add_systems(
+            Update,
+            transition_to_pvp_state.run_if(on_event::<StartPlayerVsPlayerEvent>),
         );
     }
 }

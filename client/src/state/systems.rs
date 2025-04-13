@@ -38,3 +38,8 @@ pub fn transition_to_pve_state(mut next_state: ResMut<NextState<ClientGameState>
     info!("Transitioning to pve states");
     next_state.set(ClientGameState::PlayerVsEnvironment);
 }
+
+pub fn transition_to_pvp_state(mut next_state: ResMut<NextState<ClientGameState>>) {
+    info!("Transitioning to pvp states");
+    next_state.set(ClientGameState::PlayerVsPlayer);
+}

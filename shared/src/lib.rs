@@ -21,7 +21,11 @@ pub enum ServerNetworkMessage {
         player_position: Position,
         map: Map,
     },
-    StartPlayerVsEnvironment
+    StartPlayerVsEnvironment,
+    StartPlayerVsPlayer {
+        position: Position,
+        opponent_position: Position,
+    },
 }
 
 #[derive(Encode, Decode, Debug)]
@@ -71,6 +75,9 @@ pub struct Map {
 
 #[derive(Component)]
 pub struct Player;
+
+#[derive(Component)]
+pub struct Opponent;
 
 #[derive(Component, Encode, Decode, Debug, Clone)]
 pub struct Tile {

@@ -1,6 +1,6 @@
-use crate::PlayerSpawned;
-use ascendancy_shared::{Player, PreviousPosition};
-use bevy::prelude::{Commands, EventReader};
+use crate::{PlayerSpawned, StartPlayerVsPlayerEvent};
+use ascendancy_shared::{Opponent, Player, PreviousPosition};
+use bevy::prelude::{Commands, Entity, EventReader, Query, With};
 
 pub fn insert_player_entity(
     mut commands: Commands,
@@ -15,45 +15,25 @@ pub fn insert_player_entity(
     }
 }
 
-/*
-pub fn player_input(
-    keyboard_input: Res<ButtonInput<KeyCode>>,
-    query: Query<&Player>,
+pub fn insert_pvp_players(
+    mut commands: Commands,
+    pve_player: Query<Entity, With<Player>>,
+    mut pvp_started: EventReader<StartPlayerVsPlayerEvent>,
 ) {
-    // TODO: Think about reworking the player input to run different systems depending on custom
-    // run conditions regarding key presses
-    // Supports more parallelism
-    let up = keyboard_input.pressed(KeyCode::KeyW);
-    let down = keyboard_input.pressed(KeyCode::KeyS);
-    let left = keyboard_input.pressed(KeyCode::KeyA);
-    let right = keyboard_input.pressed(KeyCode::KeyD);
-
-    let dir = match (up, down, left, right) {
-        (true, false, false, false) => Vec2::Y,
-        (false, true, false, false) => Vec2::NEG_Y,
-        (false, false, true, false) => Vec2::NEG_X,
-        (false, false, false, true) => Vec2::X,
-        (true, false, true, false) => Vec2::new(-FRAC_1_SQRT_2, FRAC_1_SQRT_2),
-        (true, false, false, true) => Vec2::new(FRAC_1_SQRT_2, FRAC_1_SQRT_2),
-        (false, true, true, false) => Vec2::new(-FRAC_1_SQRT_2, -FRAC_1_SQRT_2),
-        (false, true, false, true) => Vec2::new(FRAC_1_SQRT_2, -FRAC_1_SQRT_2),
-        _ => Vec2::ZERO,
-    };
-
-    if dir == Vec2::ZERO {
-        return;
+    for player in pve_player.iter() {
+        commands.entity(player).despawn();
     }
 
-    let dir = Dir2::new(dir).expect("Should never be an invalid direction");
-
-    let player_entity = query
-        .get_single()
-        .expect("There should always only be one player!");
-
-    player_input_events.send(PlayerInputAttempt {
-        entity: player_entity,
-        input_type: MoveAttempt(dir),
-    });
+    if let Some(pvp_started) = pvp_started.read().next() {
+        commands.spawn((
+            Player,
+            pvp_started.position.clone(),
+            PreviousPosition(pvp_started.position.0),
+        ));
+        commands.spawn((
+            Opponent,
+            pvp_started.opponent_position.clone(),
+            PreviousPosition(pvp_started.opponent_position.0),
+        ));
+    }
 }
-
-*/
