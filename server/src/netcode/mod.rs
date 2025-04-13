@@ -4,12 +4,12 @@ use crate::netcode::systems::{
 };
 use ascendancy_shared::PROTOCOL_ID;
 use bevy::app::{App, Plugin};
-use bevy::prelude::{FixedPreUpdate, IntoSystemConfigs, Update};
-use bevy_renet::RenetServerPlugin;
+use bevy::prelude::{FixedPreUpdate, IntoSystemConfigs};
 use bevy_renet::netcode::{
     NetcodeServerPlugin, NetcodeServerTransport, ServerAuthentication, ServerConfig,
 };
 use bevy_renet::renet::{ConnectionConfig, RenetServer};
+use bevy_renet::RenetServerPlugin;
 use std::net::UdpSocket;
 use std::time::SystemTime;
 

@@ -1,11 +1,11 @@
-use ascendancy_shared::{ClientGameState, Map, Player, Position};
-use bevy::prelude::*;
-use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
 use crate::camera::CameraPlugin;
 use crate::map::MapPlugin;
 use crate::netcode::NetcodePlugin;
 use crate::player::PlayerPlugin;
 use crate::state::StatePlugin;
+use ascendancy_shared::{ClientGameState, Map, Position};
+use bevy::prelude::*;
+use bevy_asset_loader::prelude::{LoadingState, LoadingStateAppExt};
 
 mod camera;
 mod map;

@@ -1,8 +1,8 @@
 use crate::ClientStateTransitionEvent;
 use crate::netcode::components::Client;
 use crate::netcode::network_handler;
-use crate::state::resources::Lobby;
-use crate::state::state::GameState;
+use crate::states::resources::Lobby;
+use crate::states::state::GameState;
 use ascendancy_shared::{ClientGameState, Map, Player, Position, ServerNetworkMessage};
 use bevy::prelude::{EventReader, NextState, Query, Res, ResMut, With, info};
 use bevy_renet::renet::RenetServer;

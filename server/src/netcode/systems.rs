@@ -1,7 +1,7 @@
-use ascendancy_shared::{ClientNetworkMessage, bincode_config};
-use bevy::prelude::{EventReader, Res, ResMut, State, info, EventWriter};
-use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
 use crate::ClientStateTransitionEvent;
+use ascendancy_shared::{bincode_config, ClientNetworkMessage};
+use bevy::prelude::{info, EventReader, EventWriter, Res, ResMut, State};
+use bevy_renet::renet::{DefaultChannel, RenetServer, ServerEvent};
 
 pub fn receive_reliable_ordered_client_messages(mut server: ResMut<RenetServer>) {
     // TODO: Can this method of sequentially iterating clients cause input lag for the player?

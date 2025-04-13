@@ -15,11 +15,6 @@ pub enum TileType {
     Wall,
 }
 
-#[derive(Clone, Copy)]
-pub enum PlayerInputType {
-    MoveAttempt(Dir2),
-}
-
 #[derive(Encode, Decode, Debug)]
 pub enum ServerNetworkMessage {
     WaitingForPlayers {

@@ -1,9 +1,7 @@
-
-use bevy::prelude::{info, Commands, EventReader, EventWriter, Query, Res, Time, Vec2, With};
-use bevy_renet::renet::RenetServer;
-use ascendancy_shared::{Player, PlayerInputType, Position, PreviousPosition};
 use crate::netcode::components::Client;
-use crate::state::resources::Lobby;
+use crate::states::resources::Lobby;
+use ascendancy_shared::{Player, Position, PreviousPosition};
+use bevy::prelude::{Commands, Res, Vec2};
 
 const VELOCITY: f32 = 200.0;
 

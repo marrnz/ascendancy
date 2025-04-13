@@ -24,6 +24,7 @@ pub fn receive_reliable_unordered_server_messages(
                 map_spawned.send(MapSpawned { map });
             },
             ServerNetworkMessage::StartPlayerVsEnvironment => {
+                info!("Received message from server {:?}", &decoded);
                 start_pve.send(StartPlayerVsEnvEvent);
             }
             _ => panic!(

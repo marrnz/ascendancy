@@ -1,20 +1,20 @@
-use bevy::app::{App, ScheduleRunnerPlugin};
-use bevy::log::LogPlugin;
-use bevy::prelude::{Event, PluginGroup};
-use bevy::MinimalPlugins;
-use std::time::Duration;
-use bevy::state::app::StatesPlugin;
-use bevy_renet::renet::ClientId;
-use ascendancy_shared::ClientGameState;
 use crate::map::MapPlugin;
 use crate::netcode::NetcodePlugin;
 use crate::player::PlayerPlugin;
-use crate::state::StatePlugin;
+use crate::states::StatePlugin;
+use ascendancy_shared::ClientGameState;
+use bevy::MinimalPlugins;
+use bevy::app::{App, ScheduleRunnerPlugin};
+use bevy::log::LogPlugin;
+use bevy::prelude::{Event, Fixed, PluginGroup, Time};
+use bevy::state::app::StatesPlugin;
+use bevy_renet::renet::ClientId;
+use std::time::Duration;
 
 mod map;
-mod player;
 mod netcode;
-mod state;
+mod player;
+mod states;
 
 pub fn main() {
     App::new()
@@ -25,6 +25,8 @@ pub fn main() {
         )
         .add_plugins(StatesPlugin)
         .add_plugins(LogPlugin::default())
+        // TODO: Tweak if players feel lag
+        .insert_resource(Time::<Fixed>::from_seconds(0.1))
         // custom plugins
         .add_plugins(NetcodePlugin)
         .add_plugins(StatePlugin)
@@ -37,5 +39,5 @@ pub fn main() {
 #[derive(Event)]
 pub struct ClientStateTransitionEvent {
     client_id: ClientId,
-    target_state: ClientGameState
+    target_state: ClientGameState,
 }

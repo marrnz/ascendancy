@@ -1,6 +1,6 @@
 use crate::map::render::assets::MapAssets;
-use ascendancy_shared::{Map, Position, TILESIZE, Tile, TileType};
-use bevy::prelude::{info, Added, Commands, Entity, Query, Res, Sprite, TextureAtlas, Transform};
+use ascendancy_shared::{Tile, TileType, TILESIZE};
+use bevy::prelude::{Added, Commands, Entity, Query, Res, Sprite, TextureAtlas, Transform};
 
 pub fn render_map(
     map_textures: Res<MapAssets>,

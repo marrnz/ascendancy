@@ -1,7 +1,7 @@
 use crate::player::systems::{spawn_player};
 use bevy::app::{App, FixedUpdate, Plugin};
 use bevy::prelude::{OnEnter, in_state};
-use crate::state::state::GameState;
+use crate::states::state::GameState;
 
 mod systems;
 pub struct PlayerPlugin;

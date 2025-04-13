@@ -19,7 +19,7 @@ pub fn set_spawning_state(mut next_state: ResMut<NextState<ClientGameState>>) {
 }
 
 pub fn send_waiting_for_lobby_state_message(mut client: ResMut<RenetClient>) {
-    info!("Sending waiting for lobby state");
+    info!("Sending waiting for lobby states");
     let waiting_for_lobby_message = ClientNetworkMessage::StateTransition {
         target_state: ClientGameState::WaitingForFullLobby,
     };
@@ -35,6 +35,6 @@ pub fn send_pve_ready_message(mut client: ResMut<RenetClient>) {
 }
 
 pub fn transition_to_pve_state(mut next_state: ResMut<NextState<ClientGameState>>) {
-    info!("Transitioning to pve state");
+    info!("Transitioning to pve states");
     next_state.set(ClientGameState::PlayerVsEnvironment);
 }
