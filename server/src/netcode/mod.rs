@@ -3,7 +3,7 @@ use crate::netcode::systems::{
     receive_reliable_unordered_client_messages,
 };
 use ascendancy_shared::PROTOCOL_ID;
-use bevy::app::{App, Plugin};
+use bevy::app::{App, Plugin, PreUpdate};
 use bevy::prelude::{FixedPreUpdate, IntoSystemConfigs};
 use bevy_renet::netcode::{
     NetcodeServerPlugin, NetcodeServerTransport, ServerAuthentication, ServerConfig,
@@ -27,7 +27,7 @@ impl Plugin for NetcodePlugin {
             .insert_resource(server)
             .insert_resource(create_renet_netcode_server_transport())
             .add_systems(
-                FixedPreUpdate,
+                PreUpdate,
                 (
                     handle_server_events,
                     receive_reliable_ordered_client_messages,

@@ -1,7 +1,7 @@
-use bevy::prelude::{info, Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With};
-use bevy::sprite::{Sprite, TextureAtlas};
-use ascendancy_shared::{Opponent, Player, Position, PreviousPosition, TILESIZE};
 use crate::player::render::assets::PlayerAssets;
+use ascendancy_shared::{Opponent, Player, Position, PreviousPosition, TILESIZE};
+use bevy::prelude::{Added, Commands, Entity, Fixed, Query, Res, Time, Transform, With, info};
+use bevy::sprite::{Sprite, TextureAtlas};
 
 pub fn spawn_player_graphics(
     player_textures: Res<PlayerAssets>,
@@ -22,7 +22,7 @@ pub fn spawn_player_graphics(
     }
 }
 
-pub fn spawn_opponent(
+pub fn spawn_opponent_graphics(
     player_textures: Res<PlayerAssets>,
     mut commands: Commands,
     query: Query<(Entity, &Position), Added<Opponent>>,
@@ -41,6 +41,7 @@ pub fn spawn_opponent(
     }
 }
 
+/*
 pub fn update_player_position(
     fixed_time: Res<Time<Fixed>>,
     mut query: Query<(&mut Transform, &Position, &PreviousPosition), With<Player>>,
@@ -55,4 +56,23 @@ pub fn update_player_position(
     let lerp_result = player_position.0.lerp(future_position, overstep_fraction);
     player_transform.translation.x = lerp_result.x;
     player_transform.translation.y = lerp_result.y;
+}
+*/
+
+pub fn update_player_position(mut query: Query<(&mut Transform, &Position), With<Player>>) {
+    let (mut player_transform, player_position) = query
+        .get_single_mut()
+        .expect("There should be exactly one player!");
+
+    player_transform.translation.x = player_position.0.x;
+    player_transform.translation.y = player_position.0.y;
+}
+
+pub fn update_opponent_position(mut query: Query<(&mut Transform, &Position), With<Opponent>>) {
+    let (mut player_transform, player_position) = query
+        .get_single_mut()
+        .expect("There should be exactly one player!");
+
+    player_transform.translation.x = player_position.0.x;
+    player_transform.translation.y = player_position.0.y;
 }

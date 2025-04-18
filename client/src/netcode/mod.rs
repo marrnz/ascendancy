@@ -1,9 +1,9 @@
-use crate::netcode::systems::receive_reliable_unordered_server_messages;
+use crate::netcode::systems::{receive_reliable_unordered_server_messages, receive_unreliable_server_messages};
 use ascendancy_shared::PROTOCOL_ID;
 use bevy::app::{App, Plugin, PreUpdate};
+use bevy_renet::RenetClientPlugin;
 use bevy_renet::netcode::{ClientAuthentication, NetcodeClientPlugin, NetcodeClientTransport};
 use bevy_renet::renet::{ConnectionConfig, RenetClient};
-use bevy_renet::RenetClientPlugin;
 use std::net::UdpSocket;
 use std::time::SystemTime;
 
@@ -19,7 +19,8 @@ impl Plugin for NetcodePlugin {
             .add_plugins(NetcodeClientPlugin)
             .insert_resource(client)
             .insert_resource(create_netcode_client_transport())
-            .add_systems(PreUpdate, receive_reliable_unordered_server_messages);
+            .add_systems(PreUpdate, receive_reliable_unordered_server_messages)
+            .add_systems(PreUpdate, receive_unreliable_server_messages);
     }
 }
 

@@ -19,6 +19,12 @@ pub fn send(server: &mut RenetServer, client: ClientId, message: ServerNetworkMe
             }
             server.send_message(client, DefaultChannel::ReliableUnordered, encoded_message);
         }
+        ServerNetworkMessage::PlayerMovement { .. } => {
+            if !server.can_send_message(client, DefaultChannel::Unreliable, encoded_message.len()) {
+                error!("Error sending message {:?}", &message);
+            }
+            server.send_message(client, DefaultChannel::Unreliable, encoded_message);
+        }
         _ => panic!("Trying to send a broadcast message {:?}", &encoded_message),
     }
 }

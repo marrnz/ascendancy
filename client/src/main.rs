@@ -21,6 +21,7 @@ fn main() {
             LoadingState::new(ClientGameState::AssetLoading)
                 .continue_to_state(ClientGameState::ConnectingToServer),
         )
+        //.add_plugins(WorldInspectorPlugin::new())
         // custom stuff
         .add_plugins(NetcodePlugin)
         .add_plugins(StatePlugin)

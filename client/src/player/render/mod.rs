@@ -1,6 +1,7 @@
 use crate::player::render::assets::PlayerAssets;
 use crate::player::render::systems::{
-    spawn_opponent, spawn_player_graphics, update_player_position,
+    spawn_opponent_graphics, spawn_player_graphics, update_opponent_position,
+    update_player_position,
 };
 use ascendancy_shared::{ClientGameState, Player};
 use bevy::app::{App, Plugin};
@@ -27,14 +28,20 @@ impl Plugin for RenderPlugin {
         )
         .add_systems(
             Update,
-            (spawn_player_graphics, spawn_opponent)
+            (spawn_player_graphics, spawn_opponent_graphics)
                 .run_if(in_state(ClientGameState::PlayerVsPlayer).and(run_once)),
         )
         .add_systems(
             Update,
-            update_player_position.run_if(
-                in_state(ClientGameState::PlayerVsEnvironment)
-                    .and(in_state(ClientGameState::PlayerVsPlayer)),
+            (
+                update_opponent_position.run_if(
+                    in_state(ClientGameState::PlayerVsEnvironment)
+                        .and(in_state(ClientGameState::PlayerVsPlayer)),
+                ),
+                update_player_position.run_if(
+                    in_state(ClientGameState::PlayerVsEnvironment)
+                        .and(in_state(ClientGameState::PlayerVsPlayer)),
+                ),
             ),
         );
     }

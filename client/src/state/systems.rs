@@ -43,3 +43,11 @@ pub fn transition_to_pvp_state(mut next_state: ResMut<NextState<ClientGameState>
     info!("Transitioning to pvp states");
     next_state.set(ClientGameState::PlayerVsPlayer);
 }
+
+pub fn send_pvp_ready_message(mut client: ResMut<RenetClient>) {
+    info!("Sending pvp ready");
+    let pvp_ready_message = ClientNetworkMessage::StateTransition {
+        target_state: ClientGameState::PlayerVsPlayer,
+    };
+    network_handler::send(&mut client, pvp_ready_message);
+}

@@ -4,11 +4,11 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-ascendancy-shared = { path = "../shared"}
+ascendancy-shared = { path = "../shared" }
 
-bevy = {workspace = true}
-bevy_renet = {workspace = true}
-bincode = {workspace = true}
+bevy = { workspace = true }
+bevy_renet = { workspace = true }
+bincode = { workspace = true }
 
 bevy_asset_loader = { version = "0.22.0", features = ["2d"] }
-uuid = { version = "1.12.1", features = ["v4"] }
+bevy-inspector-egui = "0.30.0"

@@ -26,6 +26,10 @@ pub enum ServerNetworkMessage {
         position: Position,
         opponent_position: Position,
     },
+    PlayerMovement {
+        player_position: Position,
+        opponent_position: Position,
+    }
 }
 
 #[derive(Encode, Decode, Debug)]
@@ -34,7 +38,7 @@ pub enum ClientNetworkMessage {
     PlayerInput { key_code: EncodedKeyCode },
 }
 
-#[derive(Encode, Decode, Debug)]
+#[derive(Encode, Decode, Debug, Eq, PartialEq, Copy, Clone)]
 pub enum EncodedKeyCode {
     KeyW,
     KeyS,
